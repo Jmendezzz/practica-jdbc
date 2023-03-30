@@ -6,6 +6,10 @@ public class Main {
     public static void main(String[] args) {
         ProductoRepositoryImpl productoRepository = new ProductoRepositoryImpl();
 
+        productoRepository.getList().stream().forEach(p-> System.out.println(p.toString()));
+
+        System.out.println("Get by id: "+ productoRepository.getById(2L).toString());
+
         /* Testing Save Query
 
         Producto producto = new Producto();
@@ -18,14 +22,19 @@ public class Main {
 
         //Testing Update Query
 
-        Producto productToUpdate = productoRepository.getById(3L);
+        /*
+        * Producto productToUpdate = productoRepository.getById(3L);
         productToUpdate.setNombre("Cambio de nombre Update");
         productoRepository.update(productToUpdate);
-
+        *  */
         //Testing Delete Query
+
+        /*
 
         Producto productToDelete = productoRepository.getById(5L);
         productoRepository.deleteById(productToDelete.getId());
+
+         */
 
 
     }

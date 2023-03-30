@@ -16,32 +16,27 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `producto`
+-- Table structure for table `categoria`
 --
 
-DROP TABLE IF EXISTS `producto`;
+DROP TABLE IF EXISTS `categoria`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `producto` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(255) NOT NULL,
-  `precio` double NOT NULL,
-  `fecha_registro` date NOT NULL,
-  `categoria_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `categoria_id` (`categoria_id`),
-  CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`categoria_id`) REFERENCES `categoria` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `categoria` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `producto`
+-- Dumping data for table `categoria`
 --
 
-LOCK TABLES `producto` WRITE;
-/*!40000 ALTER TABLE `producto` DISABLE KEYS */;
-INSERT INTO `producto` VALUES (2,'Gafas',10000,'2023-03-27',1),(7,'Mouse',50000,'2023-03-27',1),(8,'Camisa',30000,'2023-03-29',4),(9,'Licuadora',100000,'2023-03-29',2);
-/*!40000 ALTER TABLE `producto` ENABLE KEYS */;
+LOCK TABLES `categoria` WRITE;
+/*!40000 ALTER TABLE `categoria` DISABLE KEYS */;
+INSERT INTO `categoria` VALUES (1,'Tecnologia'),(2,'Hogar'),(3,'Comida'),(4,'Ropa');
+/*!40000 ALTER TABLE `categoria` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

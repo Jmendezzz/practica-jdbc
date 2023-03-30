@@ -1,5 +1,6 @@
 package org.example.repository.impl;
 
+import org.example.entities.Categoria;
 import org.example.entities.Producto;
 import org.example.repository.Repository;
 import org.example.singleton.ConexionDB;
@@ -18,6 +19,11 @@ public class ProductoRepositoryImpl implements Repository<Producto> {
         producto.setNombre(resultSet.getString("nombre"));
         producto.setPrecio(resultSet.getDouble("precio"));
         producto.setFechaRegistro(resultSet.getDate("fecha_registro").toLocalDate());
+        producto.setCategoria(new Categoria(
+                resultSet.getLong("categoria_id"),
+                resultSet.getString("categoria_nombre")
+
+        ));
         return producto;
     }
 
@@ -28,7 +34,9 @@ public class ProductoRepositoryImpl implements Repository<Producto> {
         try(Statement statement=getConnection().createStatement();
         ResultSet resultSet=statement.executeQuery(
             """
-                SELECT  * FROM  Producto;
+                SELECT p.*, c.nombre as categoria_nombre
+                FROM producto AS p
+                INNER JOIN categoria AS c ON p.categoria_id = c.id;
                 """
         ))
         {
@@ -48,7 +56,10 @@ public class ProductoRepositoryImpl implements Repository<Producto> {
         Producto producto=null;
         try (PreparedStatement preparedStatement=getConnection()
                 .prepareStatement(""" 
-                                    SELECT  * FROM  Producto WHERE id=?
+                                    SELECT p.*, c.nombre as categoria_nombre
+                                    FROM producto AS p
+                                    INNER JOIN categoria AS c ON p.categoria_id = c.id
+                                    WHERE p.id=?
                                     """)
         ) {
             preparedStatement.setLong(1,id);
@@ -66,13 +77,14 @@ public class ProductoRepositoryImpl implements Repository<Producto> {
     public void save(Producto producto) {
         try(PreparedStatement preparedStatement = getConnection()
                 .prepareStatement("""
-                                       INSERT INTO Producto(nombre,precio,fecha_registro) values (?,?,?)
+                                       INSERT INTO Producto(nombre,precio,fecha_registro,categoria_id) values (?,?,?,?)
                                        """)
         ){
             preparedStatement.setString(1, producto.getNombre());
             preparedStatement.setDouble(2, producto.getPrecio());
             Date fechaRegistro = Date.valueOf(producto.getFechaRegistro());
             preparedStatement.setDate(3, fechaRegistro);
+            preparedStatement.setLong(4,producto.getCategoria().getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -84,7 +96,7 @@ public class ProductoRepositoryImpl implements Repository<Producto> {
     public void update(Producto producto) {
         try(PreparedStatement preparedStatement = getConnection()
                 .prepareStatement("""
-                                    UPDATE Producto SET nombre = ?, precio = ?, fecha_registro = ? WHERE id = ?;
+                                    UPDATE Producto SET nombre = ?, precio = ?, fecha_registro = ? , categoria_id=? WHERE id = ?;
                                       """
                 )
         ){
@@ -92,7 +104,8 @@ public class ProductoRepositoryImpl implements Repository<Producto> {
             preparedStatement.setDouble(2, producto.getPrecio());
             Date fechaRegistro = Date.valueOf(producto.getFechaRegistro());
             preparedStatement.setDate(3, fechaRegistro);
-            preparedStatement.setLong(4,producto.getId());
+            preparedStatement.setLong(4,producto.getCategoria().getId());
+            preparedStatement.setLong(5,producto.getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
